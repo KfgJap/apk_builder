@@ -11,11 +11,15 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev cmake libssl-dev
+          sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev cmake libffi-dev libssl-dev
           pip install --user buildozer cython
+          export PATH=$PATH:$HOME/.local/bin
+          export ANDROID_HOME=$HOME/.buildozer/android/platform/android-sdk
+          mkdir -p $ANDROID_HOME
+          yes | sdkmanager --licenses || true
       - name: Build with Buildozer
         run: |
-          export PATH=$PATH:~/.local/bin
+          export PATH=$PATH:$HOME/.local/bin
           buildozer -v android debug
       - name: Upload APK
         uses: actions/upload-artifact@v4
